@@ -54,8 +54,7 @@ var seeItems = function() {
         store[i].price
     );
   };
-    inquirer
-      .prompt({
+    inquirer.prompt({
         name: "choice",
         type: "rawlist",
         choices: function(value) {
@@ -69,21 +68,41 @@ var seeItems = function() {
       })
       .then(function(answer) {
         console.log("working!");
-        connection.end();
+        for (var i=0; i<store.length;i++){
+          if(store[i].product_name == answer.choice){
+            var chosenItem = store[i];
+            inquirer.prompt({
+              name:"howMuch",
+              type:"input",
+              message:"How many would you like to buy?",
+              validate: function(value){
+                if(isNaN(value)== false){
+                  return true
+                } else {
+                  return false;
+                }
+              }
+            }).then(function(answer){
+              if(chosenItem.stock_quantity >= parseInt(answer.howMuch)){
+                var totalCost = parseInt(answer.howMuch)*chosenItem.price;
+                console.log("You have purchased " + chosenItem.product_name)
+                console.log("That will cost: $" + totalCost )
+                console.log("Thank you for shopping with us. Have a wonderful day!");
+                connection.query("UPDATE products SET ? WHERE ?",
+              [
+                {stock:stock - answer.howMuch},
+                {id:chosenItem.id}
+              ])
+              } else {
+                console.log("You're buying too much, please lower your amount!");
+                start();
+              }
+            })
+          }
+        }
       });
   });
 };
-//   function showlist(){
-//       connection.query("SELECT * FROM products", function (err, store){
-//           if (err){
-//               connection.end();
-//               throw err;
-//           }
-//           for (var i = 0, x = store.length; i<x; i++){
-//               console.log("Product ID: " + store[i].id + " | Product: " + store[i].product_name + " | Price: " + store[i].price);
-//           }
-//       });
-//   }
 
 //       .then(function(answer) {
 //         for (var i = 0; i < res.length; i++) {

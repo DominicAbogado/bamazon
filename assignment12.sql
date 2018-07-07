@@ -1,8 +1,8 @@
-drop database if exists bamazon;
+drop database if exists bamazon2;
 
-create database bamazon;
+create database bitemnameamazon2;
 
-use bamazon;
+use bamazon2;
 
 create table products(
 -- item ID --
@@ -16,14 +16,14 @@ primary key (id)
 
 );
 
-create table auctions_test(
+create table auctions2(
 id integer not null auto_increment,
-item_name varchar(50) not null,
+itemname varchar(50) not null,
 category varchar(50) not null,
-starting_bid integer default 0,
-highest_bid integer default 0,
+startingbid integer default 0,
+highestbid integer default 0,
 primary key (id)
 );
 
-INSERT INTO products (product_name, department_name, price, stock_quantity, in_stock)
+INSERT INTO product (product_name, department_name, price, stock_quantity, in_stock)
 values ("Ruby-Quartz Crystal Visor", "X-Men", 99.99, 1, true);

@@ -1,8 +1,8 @@
-drop database if exists bamazon;
+drop database if exists greatBay_db;
 
-create database bamazon;
+create database greatBay_db;
 
-use bamazon;
+use greatBay_db;
 
 create table products(
 -- item ID --
@@ -16,7 +16,7 @@ primary key (id)
 
 );
 
-create table auctions_test(
+create table auctions_items(
 id integer not null auto_increment,
 item_name varchar(50) not null,
 category varchar(50) not null,

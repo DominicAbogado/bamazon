@@ -32,11 +32,10 @@ var start = function() {
     })
     .then(function(answer) {
       if (answer.buyStuff == "See items") {
-        console.log("It's working I hope");
         seeItems();
         // postAuction();
       } else {
-        console.log("Thanks for coming in!");
+        console.log("Thank you for coming in. I hope Thanos doesn't snap you!");
         connection.end();
         // bidAuction()
       }
@@ -67,7 +66,6 @@ var seeItems = function() {
         mesage: "What would you like to buy?"
       })
       .then(function(answer) {
-        console.log("working!");
         for (var i=0; i<store.length;i++){
           if(store[i].product_name == answer.choice){
             var chosenItem = store[i];
@@ -85,14 +83,15 @@ var seeItems = function() {
             }).then(function(answer){
               if(chosenItem.stock_quantity >= parseInt(answer.howMuch)){
                 var totalCost = parseInt(answer.howMuch)*chosenItem.price;
-                console.log("You have purchased " + chosenItem.product_name)
-                console.log("That will cost: $" + totalCost )
-                console.log("Thank you for shopping with us. Have a wonderful day!");
+                console.log("You have purchased " + chosenItem.product_name);
+                console.log("That will cost: $" + totalCost );
                 connection.query("UPDATE products SET ? WHERE ?",
               [
-                {stock:stock - answer.howMuch},
+                {stock_quantity:chosenItem.stock_quantity - answer.howMuch},
                 {id:chosenItem.id}
-              ])
+              ]);
+              console.log("Thank you for shopping with us. How else can we help you?");
+              start();
               } else {
                 console.log("You're buying too much, please lower your amount!");
                 start();
@@ -103,110 +102,3 @@ var seeItems = function() {
       });
   });
 };
-
-//       .then(function(answer) {
-//         for (var i = 0; i < res.length; i++) {
-//           if (res[i].item_name == answer.choice) {
-//             var chosenItem = res[i];
-//             inquirer.prompt({
-//                 name: "bid",
-//                 type: "input",
-//                 message: "How much would you like to bid?",
-//                 validate: function(value) {
-//                   if (isNaN(value) == false) {
-//                     return true;
-//                   } else {
-//                     return false;
-//                   }
-//                 }
-//               })
-//               .then(function(answer) {
-//                 if (chosenItem.highest_bid < parseInt(answer.bid)) {
-//                   connection.query(
-//                     "UPDATE auctions_items SET ? WHERE ?",
-//                     [
-//                       {
-//                         highest_bid: answer.bid
-//                       },
-//                       {
-//                         id: chosenItem.id
-//                       }
-//                     ],
-//                     function(err, res) {
-//                       console.log("Bid Successfully Placed!");
-//                       start();
-//                     }
-//                   );
-//                 } else {
-//                   console.log("your bid was too low. Try again...");
-//                   start();
-//                 }
-//               });
-//           }
-//         }
-//       });
-//   });
-// };
-
-// var postAuction = function(){
-//   inquirer.prompt([{
-//     name:"item",
-//     type:"input",
-//     messsage:"What is the item you wish to submit?"
-//   },
-//   {
-//     name:"category",
-//     type:"input",
-//     message:"What category would you like to place it in?"
-//   },
-//   {
-//     name:"startingBid",
-//     type:"input",
-//     message:"what would you like the starting bid to be?",
-//     validate: function(value){
-//       if(isNaN(value)==false){
-//         return true;
-//       } else{
-//         return false;
-//       }
-//     }
-//   }]).then(function(answer){
-//     connection.query("INSERT INTO auctions_test SET ?", {
-//       item_name: answer.item,
-//       category: answer.category,
-//       startingbid: answer.startingBid,
-//       highestbid:answer.startingBid
-//     },function(err,res){
-//        console.log("You have added: "+ answer.item + " to SQL!")
-//     });
-//     });
-//   }
-
-// function goShopping() {
-//         inquirer
-//           .prompt([
-//             {
-//               type: "list",
-//               message: "What would you like to buy?",
-//               choices: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-//               name: "chosen"
-//             }
-//           ])
-//           .then(function(inquirerResponse) {
-//             var ir = inquirerResponse;
-//             var choice = parseInt(ir.chosen);
-//             console.log(ir.chosen);
-//             connection.query("SELECT * FROM products", function (err, store){
-//                 if (err){
-//                     connection.end();
-//                     throw err;
-//                 }
-//                 for (var i = 0, x = store.length; i<x; i++){
-//                     if(ir.chosen === store[i].id){
-//                         console.log(store[ir.chosen].product_name)
-//                     }
-//                 }
-//             });
-
-//           });
-//   }
